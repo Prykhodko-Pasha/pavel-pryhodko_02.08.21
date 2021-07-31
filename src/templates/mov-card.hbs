@@ -1,0 +1,36 @@
+<li class='mov-gall__item'>
+  <article class='card'>
+    <img src={{img}} alt={{name}} class='card__image' />
+    <div class='card__content'>
+      <h2 class='card__name'>{{name}}</h2>
+      <p class='card__year'>{{year}}</p>
+    </div>
+    {{!-- <p class='card__descr'>
+        {{description}}
+      </p>
+
+      <ul class='tag-list'>
+        {{#each ingredients}}
+          <li class='tag-list__item'>{{this}}</li>
+        {{/each}}
+      </ul>
+    
+
+    <button class='card__button button'>
+      <i class='material-icons button__icon'> shopping_cart </i>
+      В корзину
+    </button> --}}
+    <div class='fav-star'>
+      <input
+        class='chBox'
+        type='checkbox'
+        name='fav-star'
+        id={{id}}
+        aria-label='Add to Favourite List'
+      />
+      <label aria-hidden='true' for={{id}} class='fav-star__chBox'></label>
+      <div aria-hidden='true' class='fav-star__icon'>
+      </div>
+    </div>
+  </article>
+</li>
