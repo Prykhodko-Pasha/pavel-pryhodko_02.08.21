@@ -1,4 +1,3 @@
-// import './sass/main.scss';
 import movCardTpl from './templates/mov-card.hbs';
 import movCards from './movies.json';
 
@@ -7,32 +6,33 @@ const refs = {
   favList: document.querySelector('.fav-list'),
 };
 
-// создание и рендер разметки
+// ============= рендер разметки =============
 const movGallMarkup = movCards.map(card => movCardTpl(card)).join('');
 
 refs.movGall.innerHTML = movGallMarkup;
+// ===========================================
 
-// добавление в список фаворитов
+// составление списка фаворитов по клику на звездочку
 refs.movGall.addEventListener('click', onStarClick);
 
 function onStarClick(e) {
   if (e.target.className === 'chBox') {
+    const ElId = e.target.id;
     if (e.target.checked) {
-      addStarIdToLocalSt(e.target.id);
-      const movieId = parseInt(e.target.id) - 1;
-      // console.log(movieId);
-      const movieName = `<li class='fav-item fav-${e.target.id}'>${movCards[movieId].name}<button type="button" class="close-btn"></li>`;
-      // console.log(movieName);
+      addStarIdToLS(ElId);
+      const movieId = parseInt(ElId) - 1;
+      const movieName = `<li class='fav-item fav-${ElId}'>${movCards[movieId].name}<button type="button" class="close-btn"></li>`;
       refs.favList.insertAdjacentHTML('beforeend', movieName);
+      addFavItemToLS(movieName);
     } else {
-      const favItemIdx = `.fav-${e.target.id}`;
-      // console.log('favItemIdx: ', favItemIdx);
+      const favItemIdx = `.fav-${ElId}`;
       const favItemToDelete = document.querySelector(favItemIdx);
-      // console.log('favItemToDelete: ', favItemToDelete);
       refs.favList.removeChild(favItemToDelete);
+      delElFromLS(ElId);
     }
   }
 }
+// ===========================================
 
 // удаление со списка фаворитов нажатием на крестик
 refs.favList.addEventListener('click', e => {
@@ -50,10 +50,12 @@ function onDelFromFavList(e) {
   // console.log(starToUncheck);
   starToUncheck.checked = false;
   e.target.parentNode.remove();
+  delElFromLS(movieIdx);
 }
+// ===========================================
 
 // запоминание списка фаворитов
-function addStarIdToLocalSt(id) {
+function addStarIdToLS(id) {
   if (localStorage.getItem('starsIdList')) {
     const starsArr = JSON.parse(localStorage.getItem('starsIdList'));
     starsArr.push(id);
@@ -62,6 +64,17 @@ function addStarIdToLocalSt(id) {
     const starsArr = [id];
     localStorage.setItem('starsIdList', JSON.stringify(starsArr));
   }
+}
+
+function delElFromLS(id) {
+  const starsArr = JSON.parse(localStorage.getItem('starsIdList'));
+  const elToDel = starsArr.indexOf(id);
+  starsArr.splice(elToDel, 1);
+  localStorage.setItem('starsIdList', JSON.stringify(starsArr));
+
+  const favArr = JSON.parse(localStorage.getItem('favList'));
+  favArr.splice(elToDel, 1);
+  localStorage.setItem('favList', JSON.stringify(favArr));
 }
 
 onPopulateFavStars();
@@ -75,3 +88,25 @@ function onPopulateFavStars() {
     });
   }
 }
+
+function addFavItemToLS(item) {
+  if (localStorage.getItem('favList')) {
+    const favArr = JSON.parse(localStorage.getItem('favList'));
+    favArr.push(item);
+    localStorage.setItem('favList', JSON.stringify(favArr));
+  } else {
+    const favArr = [item];
+    localStorage.setItem('favList', JSON.stringify(favArr));
+  }
+}
+
+onPopulateFavList();
+function onPopulateFavList() {
+  if (localStorage.getItem('favList')) {
+    const favArr = JSON.parse(localStorage.getItem('favList'));
+    console.log(favArr);
+    const favListMarkUp = favArr.join('');
+    refs.favList.innerHTML = favListMarkUp;
+  }
+}
+// ===========================================
