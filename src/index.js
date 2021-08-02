@@ -18,22 +18,56 @@ refs.movGall.innerHTML = movGallMarkup;
 
 // ========= рендер разметки модалки =========
 refs.movGall.addEventListener('click', onNameClick);
+refs.favList.addEventListener('click', onFavNameClick);
 
 function onNameClick(e) {
   if (e.target.className === 'card__name') {
     const movieId = e.target.dataset.id;
     // console.log(movieId);
-    const modalMurkup = modalContentTpl(movCards[movieId - 1]);
-    refs.modalContent.innerHTML = modalMurkup;
-    refs.modal.classList.add('is-open');
+    // const modalMurkup = modalContentTpl(movCards[movieId - 1]);
+    // refs.modalContent.innerHTML = modalMurkup;
+    // refs.modal.classList.add('is-open');
 
-    window.addEventListener('keydown', onKeyPressModal);
+    // window.addEventListener('keydown', onKeyPressModal);
 
-    onPopulateModalStar(movieId);
+    // onPopulateModalStar(movieId);
 
-    const modalCloseBtn = document.querySelector('.modal__close-btn');
-    modalCloseBtn.addEventListener('click', onCloseModal);
+    // const modalCloseBtn = document.querySelector('.modal__close-btn');
+    // modalCloseBtn.addEventListener('click', onCloseModal);
+    GenerateModal(movieId);
   }
+}
+
+function onFavNameClick(e) {
+  if (e.target.className !== 'close-btn') {
+    const movieId = e.target.className.split('-').pop();
+    // console.log(movieId);
+    // const modalMurkup = modalContentTpl(movCards[movieId - 1]);
+    // refs.modalContent.innerHTML = modalMurkup;
+    // refs.modal.classList.add('is-open');
+
+    // window.addEventListener('keydown', onKeyPressModal);
+
+    // onPopulateModalStar(movieId);
+
+    // const modalCloseBtn = document.querySelector('.modal__close-btn');
+    // modalCloseBtn.addEventListener('click', onCloseModal);
+
+    GenerateModal(movieId);
+  }
+}
+
+function GenerateModal(id) {
+  const modalMurkup = modalContentTpl(movCards[id - 1]);
+  refs.modalContent.innerHTML = modalMurkup;
+  refs.modal.classList.add('is-open');
+
+  window.addEventListener('keydown', onKeyPressModal);
+
+  onPopulateModalStar(id);
+
+  const modalCloseBtn = document.querySelector('.modal__close-btn');
+  modalCloseBtn.addEventListener('click', onCloseModal);
 }
 
 function onPopulateModalStar(id) {
@@ -71,6 +105,7 @@ function onKeyPressModal(e) {
 refs.movGall.addEventListener('click', onStarClick);
 
 function onStarClick(e) {
+  // console.log(e.target.className);
   if (e.target.className === 'chBox') {
     const ElId = e.target.id;
     if (e.target.checked) {

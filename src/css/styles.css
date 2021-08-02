@@ -149,7 +149,7 @@ body {
   font-weight: 500;
   align-items: center;
   display: flex;
-  /* align-items: center; */
+  cursor: pointer;
 }
 
 .fav-item::before {
