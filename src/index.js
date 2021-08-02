@@ -1,15 +1,70 @@
 import movCardTpl from './templates/mov-card.hbs';
+import modalContentTpl from './templates/modal.hbs';
 import movCards from './movies.json';
 
 const refs = {
   movGall: document.querySelector('.mov-gall__list'),
   favList: document.querySelector('.fav-list'),
+  modal: document.querySelector('.modal'),
+  modalOverlay: document.querySelector('.modal__overlay'),
+  modalContent: document.querySelector('.modal__content'),
 };
 
-// ============= рендер разметки =============
+// ========= рендер разметки галлереи =========
 const movGallMarkup = movCards.map(card => movCardTpl(card)).join('');
 
 refs.movGall.innerHTML = movGallMarkup;
+// ===========================================
+
+// ========= рендер разметки модалки =========
+refs.movGall.addEventListener('click', onNameClick);
+
+function onNameClick(e) {
+  if (e.target.className === 'card__name') {
+    const movieId = e.target.dataset.id;
+    // console.log(movieId);
+    const modalMurkup = modalContentTpl(movCards[movieId - 1]);
+    refs.modalContent.innerHTML = modalMurkup;
+    refs.modal.classList.add('is-open');
+
+    window.addEventListener('keydown', onKeyPressModal);
+
+    onPopulateModalStar(movieId);
+
+    const modalCloseBtn = document.querySelector('.modal__close-btn');
+    modalCloseBtn.addEventListener('click', onCloseModal);
+  }
+}
+
+function onPopulateModalStar(id) {
+  const modalStarIcon = document.querySelector('.modal__fav-star__icon');
+  const starToCheck = document.getElementById(id);
+  if (starToCheck.checked) {
+    modalStarIcon.classList.add('checked');
+  }
+
+  const modalChBox = document.querySelector('.modal__fav-star__chBox');
+  modalChBox.addEventListener('click', () => {
+    modalStarIcon.classList.toggle('checked');
+  });
+}
+// ===========================================
+
+// ========== закрытие модалки ===============
+refs.modalOverlay.addEventListener('click', onCloseModal);
+
+function onCloseModal() {
+  refs.modal.classList.remove('is-open');
+  refs.modalContent.innerHTML = '';
+
+  window.removeEventListener('keydown', onKeyPressModal);
+}
+
+function onKeyPressModal(e) {
+  if (e.code === 'Escape') {
+    onCloseModal();
+  }
+}
 // ===========================================
 
 // составление списка фаворитов по клику на звездочку
@@ -43,8 +98,7 @@ refs.favList.addEventListener('click', e => {
 });
 
 function onDelFromFavList(e) {
-  // console.log(e.target.parentNode.textContent);
-  const movieIdx = e.target.parentNode.className.split('').pop();
+  const movieIdx = e.target.parentNode.className.split('-').pop();
   // console.log(movieIdx);
   const starToUncheck = document.getElementById(movieIdx);
   // console.log(starToUncheck);

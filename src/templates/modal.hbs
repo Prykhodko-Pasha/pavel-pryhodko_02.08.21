@@ -1,0 +1,28 @@
+<div class='modal__content-left'>
+  <img class='modal__img' src={{img}} alt={{name}} />
+  <div class='modal__fav-star'>
+    <label aria-hidden='true' for={{id}} class='modal__fav-star__chBox'></label>
+    <div aria-hidden='true' class='modal__fav-star__icon'></div>
+  </div>
+  <p class='modal__year'>{{year}}</p>
+  <ul class='modal__genres'>
+    {{#each genres}}
+      <li class='modal__genre-item'>{{this}}</li>
+    {{/each}}
+  </ul>
+</div>
+<div class='modal__content-right'>
+  <h2 class='modal__name'>{{name}}</h2>
+  <p class='modal__desc'>{{description}}</p>
+  <p class='modal__director'><b>Director:</b> {{director}}</p>
+  <p class='modal__starring'><b>Starring:</b>
+    {{#each starring}}
+      {{#if @last}}
+        {{this}}
+      {{else}}
+        {{this}},
+      {{/if}}
+    {{/each}}
+  </p>
+</div>
+<button type='button' class='modal__close-btn' data-action='close-modal'></button>
